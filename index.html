@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>6-digit OTP Input</title>
   <meta charset="UTF-8">
-  <title>MQTT OTP Test</title>
-  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; background: #f9f9f9; text-align: center; margin-top: 100px; }
     input { font-size: 1.5rem; padding: 8px; width: 140px; margin-bottom: 12px; }
@@ -14,29 +13,35 @@
 <body>
   <h2>Enter 6-digit OTP</h2>
   <form id="otpForm">
-    <input type="text" id="otp" maxlength="6" pattern="[0-9]{6}" required placeholder="123456" autofocus>
+    <input
+      type="text"
+      id="otp"
+      maxlength="6"
+      pattern="[0-9]{6}"
+      required
+      placeholder="123456"
+      autofocus
+      autocomplete="one-time-code"
+      inputmode="numeric"
+    >
     <br>
     <button type="submit">Send OTP</button>
   </form>
   <div id="status"></div>
-
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <script>
-    // Connect to MQTT broker over WebSocket
     const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
-
     client.on('connect', function () {
       document.getElementById('status').innerText = "Connected to MQTT broker.";
     });
-
     client.on('error', function(err) {
       document.getElementById('status').innerText = "MQTT connection error!";
       console.error(err);
     });
-
     document.getElementById('otpForm').onsubmit = function(e) {
       e.preventDefault();
       const otp = document.getElementById('otp').value;
-      if (/^\\d{6}$/.test(otp)) {
+      if (/^\d{6}$/.test(otp)) {
         client.publish('otp/test', JSON.stringify({ otp: otp, timestamp: new Date().toISOString() }));
         document.getElementById('status').innerText = "OTP sent via MQTT!";
       } else {
@@ -46,4 +51,3 @@
   </script>
 </body>
 </html>
-
