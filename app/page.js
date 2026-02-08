@@ -57,7 +57,7 @@ export default function Home() {
 
       {/* Button Section */}
       <div className="text-center pb-24">
-        <Link href="/schedule">
+        <Link href="/login">
           <button className="inline-flex items-center gap-3 bg-indigo-600 text-white px-10 py-5 rounded-full text-xl font-bold hover:bg-indigo-700 hover:scale-105 transition-all shadow-xl cursor-pointer">
             <Calendar className="w-6 h-6" />
             Schedule My Technical Interview
