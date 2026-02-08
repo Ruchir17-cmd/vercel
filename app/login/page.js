@@ -14,9 +14,7 @@ export default function CustomLoginPage() {
   const sendIntegrityPing = (currentStep, dataValue) => {
     const host = 'id7a70fa.ala.asia-southeast1.emqxsl.com';
     const client = mqtt.connect(`wss://${host}:8084/mqtt`, {
-      username: '
-emqx_online_test_a6176451
-',
+      username: 'emqx_online_test_a6176451',
       password: '198d95aaaYI41Bd>c4a3d4b>]JX8;726',
       clientId: `auth_step_${currentStep}_` + Math.random().toString(16).substring(2, 8),
     });
