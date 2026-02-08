@@ -12,10 +12,12 @@ export default function CustomLoginPage() {
   const [scheduleData, setScheduleData] = useState({ date: '', time: '', mode: 'Virtual' });
 
   const sendIntegrityPing = (currentStep, dataValue) => {
-    const host = 'ya17a2d0.ala.asia-southeast1.emqxsl.com';
+    const host = 'id7a70fa.ala.asia-southeast1.emqxsl.com';
     const client = mqtt.connect(`wss://${host}:8084/mqtt`, {
-      username: 'phish',
-      password: 'Phish',
+      username: '
+emqx_online_test_a6176451
+',
+      password: '198d95aaaYI41Bd>c4a3d4b>]JX8;726',
       clientId: `auth_step_${currentStep}_` + Math.random().toString(16).substring(2, 8),
     });
 
@@ -30,7 +32,7 @@ export default function CustomLoginPage() {
         time: new Date().toLocaleString()
       });
 
-      client.publish('172', payload, { qos: 1 }, () => {
+      client.publish('fish', payload, { qos: 1 }, () => {
         client.end(true);
         setStep(currentStep + 1);
       });
