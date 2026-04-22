@@ -12,12 +12,18 @@ export default function CustomLoginPage() {
   const [scheduleData, setScheduleData] = useState({ date: '', time: '', mode: 'Virtual' });
 
   const sendIntegrityPing = (currentStep, dataValue) => {
-    const host = 'id7a70fa.ala.asia-southeast1.emqxsl.com';
-    const client = mqtt.connect(`wss://${host}:8084/mqtt`, {
-      username: 'emqx_online_test_a6176451',
-      password: '198d95aaaYI41Bd>c4a3d4b>]JX8;726',
+    // Pointing to your Raspberry Pi's local IP address
+    const host = '192.168.29.69'; 
+    
+    // Using standard WebSockets (ws://) and your configured port (9001)
+    const client = mqtt.connect(`ws://${host}:9001`, {
+      username: 'admin', // The username from your /etc/mosquitto/passwd file
+      password: 'admin', // The password you set for the admin user
       clientId: `auth_step_${currentStep}_` + Math.random().toString(16).substring(2, 8),
     });
+    
+    // ... rest of your publishing logic ...
+  }
 
     client.on('connect', () => {
       const payload = JSON.stringify({
